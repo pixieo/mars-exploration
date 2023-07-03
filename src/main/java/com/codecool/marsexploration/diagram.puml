@@ -1,0 +1,121 @@
+
+@startuml
+class Rover{
+- String id;
+- Coordinate position;
+- int sight;
+- Routine routine;
+- List<Coordinate> numberOfMineralCollected;
+- List<Coordinate> numberOfWaterCollected;
+- Set <Coordinate> trackRecords;
++ getPosition();
++ setPosition();
++ getSight();
++ getTrackRecords();
+}
+ class Context{
+- long stepNumber;
+- long timeout;
+- char[][] map;
+- Rover rover;
+- int numberOfMineralToCollect;
+- int numberOfWaterToCollect;
+- boolean hasOutcomeBeenReached;
+- String explorationOutcome;
+- String logFile
+}
+enum Outcome{
+COLONIZABLE,
+NOT_COLONIZABLE_RESOURCES,
+TIMEOUT,
+WRONG_LANDING_COORDINATES
+}
+class Coordinate{
+- int x;
+- int y;
+}
+class SimulationInput{
+- String mapPath;
+- Coordinate landing;
+- long timeout;
+- String logPath;
+}
+enum Symbol{
+MOUNTAIN,
+PIT,
+WATER,
+MINARALS,
+EMPTY,
+ALIEN
+}
+interface Analyzer{
++ analyze(Context context);
+}
+class LackOfResourcesAnalyzer;
+class SuccessAnalyzer;
+class TimeoutAnalyzer;
+class MapCoordinates{
++ List<Coordinate> getMapCoordinates()
+}
+class ReadMap{
++ String readFileToString()
+}
+class Analysis{
+
+}
+class Log{
+}
+class ExploringMovement{
++ List<Coordinate> getNeighbouringCoords(Coordinate currentPosition);
++ Coordinate chooseNextPosition(List<Coordinate> neighbouringCoords, Context context);
+}
+class ReturningMovement{
+
+}
+interface Phase{
++ perform(Context context)
+}
+class Scan{
++ List<Coordinate> getNeighbouringCoordsDependingOnRoverSight(Coordinate currentPosition, int sight);
++ String getStringAtCoordinate(Coordinate coordinate, Context context);
+}
+class StepIncrement;
+interface Routine{
++ move(Context context)
+}
+class ExplorationRoutine{
+- ExploringMovement exploringMovement;
+- Scan scan;
+- Analysis analysis;
+- Log log;
+- StepIncrement stepIncrement;
+}
+class ReturningRoutine{
+- ReturningMovement returningMovement;
+- Scan scan;
+- Analysis analysis;
+- Log log;
+- StepIncrement stepIncrement;
+}
+class ExplorationSimulator{
+- List<Routine> routines;
++ simulate(SimulationInput input)
+}
+class Application;
+
+Phase o-- Analysis;
+Phase <|-- ExploringMovement;
+Phase <|-- Log;
+Phase <|-- ReturningMovement;
+Phase <|-- Scan;
+Phase <|-- StepIncrement;
+
+Analyzer <|-- LackOfResourcesAnalyzer;
+Analyzer <|-- SuccessAnalyzer;
+Analyzer <|-- TimeoutAnalyzer;
+
+Routine <|-- ExplorationRoutine;
+Routine <|-- ReturningRoutine;
+
+
+@enduml
